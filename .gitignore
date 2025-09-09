@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+*.wav
+*.mp3
+*.flac
+temp_*
+chunk_*
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
