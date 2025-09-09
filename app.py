@@ -64,4 +64,6 @@ iface = gr.Interface(
     title="Meeting Summarizer"
 )
 
-iface.launch()
+if __name__ == "__main__":
+    # important for Hugging Face Spaces
+    iface.launch(server_name="0.0.0.0", server_port=7860)
