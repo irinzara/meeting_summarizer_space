@@ -1,0 +1,6 @@
+gradio
+torch
+transformers
+openai-whisper
+pydub
+speechrecognition
