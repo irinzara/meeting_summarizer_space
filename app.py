@@ -7,8 +7,8 @@ import tempfile
 
 # Load models
 whisper_model = whisper.load_model("tiny")  # tiny for speed
-summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
-ner = pipeline("ner", aggregation_strategy="simple", grouped_entities=True)
+# summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+# ner = pipeline("ner", aggregation_strategy="simple", grouped_entities=True)
 
 def extract_audio(file_path):
     """Extract audio from audio/video files and convert to mono WAV 16kHz"""
