@@ -4,6 +4,7 @@ from pydub import AudioSegment
 import os
 import tempfile
 
+
 # Initialize recognizer
 recognizer = sr.Recognizer()
 # summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
