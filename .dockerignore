@@ -1,0 +1,10 @@
+venv
+__pycache__
+*.mp4
+*.mp3
+*.wav
+*.zip
+*.tar
+*.log
+node_modules
+.git

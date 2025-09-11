@@ -1,6 +1,7 @@
-gradio
+gradio==4.44.0
 torch
-transformers
+torchaudio
+transformers==4.44.0
 openai-whisper
 pydub
-speechrecognition
+ffmpeg-python
