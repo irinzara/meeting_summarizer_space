@@ -48,27 +48,8 @@ def transcribe_audio(audio_path):
         return ""
 
 def summarize_text(text, chunk_size=500):
-    if not text.strip():
-        return "Error: No transcribable audio detected."
-    
-    words = text.split()
-    if len(words) <= chunk_size:
-        return summarizer(text, max_length=150, min_length=40, do_sample=False)[0]["summary_text"]
-    
-    summaries = []
-    for i in range(0, len(words), chunk_size):
-        chunk = " ".join(words[i:i+chunk_size])
-        try:
-            summaries.append(summarizer(chunk, max_length=150, min_length=40, do_sample=False)[0]["summary_text"])
-        except:
-            summaries.append(" ".join(chunk.split()[:50]) + "...")
-    
-    combined = " ".join(summaries)
-    try:
-        final_summary = summarizer(combined, max_length=200, min_length=50, do_sample=False)[0]["summary_text"]
-    except:
-        final_summary = combined[:500] + "..."
-    return final_summary
+    # return plain transcript since summarizer is commented
+    return text
 
 def summarize_meeting(file):
     if os.path.getsize(file) > 100 * 1024 * 1024:
@@ -88,10 +69,12 @@ def summarize_meeting(file):
     
     summary = summarize_text(transcript)
     
-    try:
-        entities = ner(transcript[:1000]) if transcript.strip() else []
-    except:
-        entities = []
+    # entities pipeline commented out
+    # try:
+    #     entities = ner(transcript[:1000]) if transcript.strip() else []
+    # except:
+    #     entities = []
+    entities = {}
 
     return summary, entities
 
