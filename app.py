@@ -75,7 +75,7 @@ def summarize_meeting(file):
 iface = gr.Interface(
     fn=summarize_meeting,
     inputs=gr.File(label="Upload Audio/Video", type="filepath"),
-    outputs=[gr.Textbox(label="Summary"), gr.JSON(label="Entities", type="auto")],
+    outputs=[gr.Textbox(label="Summary"), gr.JSON(label="Entities")],
     title="Meeting Summarizer",
     description="Upload audio/video (<100 MB) to get a summary and extracted entities."
 )
