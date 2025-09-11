@@ -4,11 +4,8 @@ from pydub import AudioSegment
 import os
 import tempfile
 
-
 # Initialize recognizer
 recognizer = sr.Recognizer()
-# summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
-# ner = pipeline("ner", aggregation_strategy="simple", grouped_entities=True)
 
 def extract_audio(file_path):
     """Extract audio from audio/video files and convert to mono WAV 16kHz"""
@@ -44,7 +41,6 @@ def transcribe_audio(audio_path):
     try:
         with sr.AudioFile(audio_path) as source:
             audio_data = recognizer.record(source)
-            # Sphinx offline transcription
             return recognizer.recognize_sphinx(audio_data)
     except:
         return ""
@@ -55,7 +51,7 @@ def summarize_text(text, chunk_size=500):
 
 def summarize_meeting(file):
     if os.path.getsize(file) > 100 * 1024 * 1024:
-        return "Error: File too large. Upload <100 MB.", {}
+        return "Error: File too large. Upload <100 MB.", {"entities": []}
     
     audio_path = extract_audio(file)
     chunks = chunk_audio(audio_path)
@@ -71,23 +67,19 @@ def summarize_meeting(file):
     
     summary = summarize_text(transcript)
     
-    # entities pipeline commented out
-    # try:
-    #     entities = ner(transcript[:1000]) if transcript.strip() else []
-    # except:
-    #     entities = []
-    entities = {}
+    # Safe empty JSON output for Gradio
+    entities = {"entities": []}
 
     return summary, entities
 
 iface = gr.Interface(
     fn=summarize_meeting,
     inputs=gr.File(label="Upload Audio/Video", type="filepath"),
-    outputs=[gr.Textbox(label="Summary"), gr.JSON(label="Entities")],
+    outputs=[gr.Textbox(label="Summary"), gr.JSON(label="Entities", type="auto")],
     title="Meeting Summarizer",
     description="Upload audio/video (<100 MB) to get a summary and extracted entities."
 )
 
 if __name__ == "__main__":
+    # Use PORT from Render automatically, no share needed
     iface.launch(server_name="0.0.0.0", server_port=int(os.environ.get("PORT", 8080)))
-
