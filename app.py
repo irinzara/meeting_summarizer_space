@@ -1,12 +1,11 @@
 import gradio as gr
-import whisper
-from transformers import pipeline
+import speech_recognition as sr
 from pydub import AudioSegment
 import os
 import tempfile
 
-# Load models
-whisper_model = whisper.load_model("tiny")  # tiny for speed
+# Initialize recognizer
+recognizer = sr.Recognizer()
 # summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 # ner = pipeline("ner", aggregation_strategy="simple", grouped_entities=True)
 
@@ -42,8 +41,10 @@ def chunk_audio(audio_path, chunk_length_ms=30000):
 
 def transcribe_audio(audio_path):
     try:
-        result = whisper_model.transcribe(audio_path, fp16=False, language='en')
-        return result.get("text", "")
+        with sr.AudioFile(audio_path) as source:
+            audio_data = recognizer.record(source)
+            # Sphinx offline transcription
+            return recognizer.recognize_sphinx(audio_data)
     except:
         return ""
 
