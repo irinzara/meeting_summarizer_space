@@ -7,21 +7,17 @@ import nltk
 from nltk.tokenize import sent_tokenize
 
 # Download NLTK punkt tokenizer if not already
-import nltk
 try:
     nltk.data.find("tokenizers/punkt")
 except LookupError:
     nltk.download("punkt")
 
-
-# Load Whisper model once
-whisper_model = None
+# Load Whisper model once at startup
+print("Loading Whisper model...")
+whisper_model = whisper.load_model("tiny")
+print("Model loaded.")
 
 def get_whisper_model():
-    global whisper_model
-    if whisper_model is None:
-        import whisper
-        whisper_model = whisper.load_model("tiny")
     return whisper_model
 
 def extract_audio(file_path):
@@ -61,7 +57,6 @@ def transcribe_audio(audio_path):
         return result["text"]
     except Exception as e:
         return f"[Transcription error: {e}]"
-
 
 def summarize_text_simple(text, max_sentences=5):
     """Simple summarizer: pick first and most important sentences"""
@@ -103,6 +98,5 @@ iface = gr.Interface(
 )
 
 if __name__ == "__main__":
-    iface.launch(server_name="0.0.0.0")
-
-
+    port = int(os.environ.get("PORT", 7860))  # Hugging Face assigns PORT
+    iface.launch(server_name="0.0.0.0", server_port=port)
