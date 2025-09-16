@@ -7,10 +7,22 @@ import nltk
 from nltk.tokenize import sent_tokenize
 
 # Download NLTK punkt tokenizer if not already
-nltk.download('punkt')
+import nltk
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
+
 
 # Load Whisper model once
-whisper_model = whisper.load_model("tiny")  # small, fast, reasonably accurate
+whisper_model = None
+
+def get_whisper_model():
+    global whisper_model
+    if whisper_model is None:
+        import whisper
+        whisper_model = whisper.load_model("tiny")
+    return whisper_model
 
 def extract_audio(file_path):
     """Extract audio from audio/video files and convert to mono WAV 16kHz"""
@@ -44,10 +56,12 @@ def chunk_audio(audio_path, chunk_length_ms=30000):
 def transcribe_audio(audio_path):
     """Whisper transcription"""
     try:
-        result = whisper_model.transcribe(audio_path)
+        model = get_whisper_model()
+        result = model.transcribe(audio_path)
         return result["text"]
     except Exception as e:
         return f"[Transcription error: {e}]"
+
 
 def summarize_text_simple(text, max_sentences=5):
     """Simple summarizer: pick first and most important sentences"""
@@ -89,4 +103,5 @@ iface = gr.Interface(
 )
 
 if __name__ == "__main__":
-    iface.launch(server_name="0.0.0.0", server_port=int(os.environ.get("PORT", 8080)))
+    iface.launch(server_name="0.0.0.0", server_port=8080, share=True)
+
